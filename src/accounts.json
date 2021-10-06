@@ -1,0 +1,103 @@
+{
+  "accountsOld": [
+    {
+      "id": 1,
+      "transactions": [
+        {
+          "id": 11,
+          "amount": 2039.20,
+          "type": "credit"
+        },
+        {
+          "id": 15,
+          "amount": 143.92,
+          "type": "debit"
+        },
+        {
+          "id": 24,
+          "amount": 143.92,
+          "type": "debit"
+        },
+        {
+          "id": 28,
+          "amount": 143.92,
+          "type": "debit"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "transactions": [
+        {
+          "id": 12,
+          "amount": 143.92,
+          "type": "debit"
+        },
+        {
+          "id": 14,
+          "amount": 143.92,
+          "type": "debit"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "transactions": [
+        {
+          "id": 22,
+          "amount": 143.92,
+          "type": "debit"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "transactions": [
+        {
+          "id": 20,
+          "amount": 143.92,
+          "type": "debit"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "id": 1,
+      "transactions": [
+        {
+          "id": 11,
+          "timestamp": "2021-10-01 01:00:00",
+          "action": "credit",
+          "description": "Direct Deposit from MANDO BOUNTIES, LLC",
+          "amount": 2039.20,
+          "currency": "YEN"
+        },
+        {
+          "id": 15,
+          "timestamp": "2021-09-28 03:21:02",
+          "action": "debit",
+          "description": "Force-Sensitive Daycare services",
+          "amount": 85.63,
+          "currency": "USD"
+        },
+        {
+          "id": 24,
+          "timestamp": "2021-10-01 21:09:31",
+          "action": "debit",
+          "description": "Beskar polishing",
+          "amount": 532.82,
+          "currency": "EUR"
+        },
+        {
+          "id": 28,
+          "timestamp": "2021-09-29 18:54:52",
+          "action": "debit",
+          "description": "Blue Milk Enterprises",
+          "amount": 13.46,
+          "currency": "BP"
+        }
+      ]
+    }
+  ]
+}
