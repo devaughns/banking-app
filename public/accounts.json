@@ -2,6 +2,7 @@
   "accountsOld": [
     {
       "id": 1,
+      "name": "Savings",
       "transactions": [
         {
           "id": 11,
@@ -27,6 +28,7 @@
     },
     {
       "id": 2,
+      "name": "Checking",
       "transactions": [
         {
           "id": 12,
@@ -64,6 +66,45 @@
   "accounts": [
     {
       "id": 1,
+      "name": "Savings",
+      "transactions": [
+        {
+          "id": 11,
+          "timestamp": "2021-10-01 01:00:00",
+          "action": "debit",
+          "description": "Transfer to Checking. Note: For armor repair",
+          "amount": 2039.20,
+          "currency": "YEN"
+        },
+        {
+          "id": 15,
+          "timestamp": "2021-09-01 13:21:02",
+          "action": "credit",
+          "description": "Transfer from Checking. Note: Monthly deposit",
+          "amount": 500,
+          "currency": "USD"
+        },
+        {
+          "id": 24,
+          "timestamp": "2021-08-01 21:09:31",
+          "action": "credit",
+          "description": "Transfer from Checking. Note: Monthly deposit",
+          "amount": 550,
+          "currency": "EUR"
+        },
+        {
+          "id": 28,
+          "timestamp": "2021-07-02 18:54:52",
+          "action": "credit",
+          "description": "Transfer from Checking. Note: Monthly deposit",
+          "amount": 400,
+          "currency": "BP"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Checking",
       "transactions": [
         {
           "id": 11,
