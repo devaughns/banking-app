@@ -67,6 +67,7 @@
     {
       "id": 1,
       "name": "Savings",
+      "startingFunds": 15029.78,
       "transactions": [
         {
           "id": 11,
@@ -105,6 +106,7 @@
     {
       "id": 2,
       "name": "Checking",
+      "startingBalance": 850.83,
       "transactions": [
         {
           "id": 11,

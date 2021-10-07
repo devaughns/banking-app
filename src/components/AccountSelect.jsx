@@ -24,11 +24,8 @@ export const AccountSelect = ({onUpdate}) => {
     }
 
     return <>
-        <Row>
-            <Col xs={6} className='text-right'>
-                <h5 className="form-label"><b>Account:</b></h5>
-            </Col>
-            <Col xs={6}>
+        {/*<Row>*/}
+        {/*    <Col xs={6}>*/}
                 {loading && (
                     <ProgressBar
                         style={{height: '40px'}}
@@ -44,8 +41,8 @@ export const AccountSelect = ({onUpdate}) => {
                         })}
                     </select>
                 )}
-            </Col>
-        </Row>
+            {/*</Col>*/}
+        {/*</Row>*/}
     </>
 
 }

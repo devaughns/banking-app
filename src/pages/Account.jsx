@@ -1,12 +1,14 @@
-import React, {Fragment, useState} from "react";
-import {Card, Col, ProgressBar, Row} from "react-bootstrap";
+import React, {Fragment, useEffect, useState} from "react";
+import {Button, Card, Col, Collapse, ProgressBar, Row} from "react-bootstrap";
 import {Transaction} from "./Transaction";
 import moment from "moment";
 import {AccountSelect} from "../components/AccountSelect";
+import {TransactionForm} from "../components/TransactionForm";
 
 export const Account = () => {
 
     const [account, setAccount] = useState();
+    const [showForm, setShowForm] = useState(false);
 
     const sortTransactions = (tran1, tran2) => {
         return moment(tran2.timestamp, 'YYYY-MM-DD HH:mm:ss') - moment(tran1.timestamp, 'YYYY-MM-DD HH:mm:ss');
@@ -19,7 +21,20 @@ export const Account = () => {
 
                 <Card>
                     <Card.Header>
-                        <AccountSelect onUpdate={setAccount}/>
+                        <Row>
+                            <Col xs={6} sm={2}>
+                                <b className="form-label">Balance:</b>
+                            </Col>
+                            <Col xs={6} sm={3} className="text-right">
+                                {(account && account.startingFunds && account.startingFunds.toFixed(2)) || '000.00'}
+                            </Col>
+                            <Col xs={4} sm={2}>
+                                <b className="form-label">Account:</b>
+                            </Col>
+                            <Col xs={8} sm={5}>
+                                <AccountSelect onUpdate={setAccount}/>
+                            </Col>
+                        </Row>
                     </Card.Header>
                     <Card.Body>
                         {!account && (<>
@@ -40,6 +55,21 @@ export const Account = () => {
                         </>)}
 
                     </Card.Body>
+                    <Card.Footer>
+                        <Button variant="outline-success" disabled={showForm} onClick={() => setShowForm(true)}>
+                            <i className="bi bi-arrow-left-right"/> Transfer Funds
+                        </Button>
+                        <Collapse in={showForm}>
+                            <div>
+                                <TransactionForm
+                                    onCancel={() => setShowForm(false)}
+                                    onSubmit={data => {
+                                        console.log(data)
+                                    }}
+                                />
+                            </div>
+                        </Collapse>
+                    </Card.Footer>
                 </Card>
             </Col>
         </Row>

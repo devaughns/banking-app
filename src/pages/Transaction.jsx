@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Row, Collapse, Col, Card} from "react-bootstrap";
+import {Row, Collapse, Col, Card, Fade} from "react-bootstrap";
 import moment from "moment";
 
 const BS_RED = '#dc3545';
@@ -7,7 +7,7 @@ const BS_GREEN = '#28a745'
 
 export const Transaction = ({transaction, show}) => {
 
-    const [showInfo, setShowInfo] = useState(show || true);
+    const [showInfo, setShowInfo] = useState(show || false);
 
     const actionType = {
         debit: 'danger',
@@ -30,10 +30,15 @@ export const Transaction = ({transaction, show}) => {
             <Card border={actionType[transaction.action]}>
                 <Card.Header onClick={() => setShowInfo(!showInfo)}>
                     <Row>
-                        <Col xs={5}>
+                        <Col xs={2}>
                             {formatDate(transaction.timestamp, 'MM/DD/YYYY')}
                         </Col>
-                        <Col xs={5} sm={6} className="text-right">
+                        <Col xs={5}>
+                            <Fade in={!showInfo}>
+                                <div>{transaction.description}</div>
+                            </Fade>
+                        </Col>
+                        <Col xs={4} sm={4} className="text-right">
                             <span style={{color: transaction.action === 'debit' ? BS_RED : BS_GREEN, fontWeight: 'bold'}}>
                                 {transaction.action === 'debit' && "-"}
                                 {getCurrencySymbol[transaction.currency]}
@@ -51,6 +56,11 @@ export const Transaction = ({transaction, show}) => {
                 <Collapse in={showInfo}>
                     <div>
                         <Card.Body>
+                            <Row>
+                                <Col>
+                                    <small>({transaction.action})</small>
+                                </Col>
+                            </Row>
                             <Row>
                                 <Col md={6}>
                                     {transaction.description}
