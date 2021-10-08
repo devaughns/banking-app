@@ -1,53 +1,62 @@
 import React, {useEffect, useState} from "react";
-import {useForm, useFormContext, FormProvider} from "react-hook-form";
-import {Button, Col, Dropdown, DropdownButton, Form, InputGroup} from "react-bootstrap";
+import {useFormContext, FormProvider} from "react-hook-form";
+import {Button, Col, Dropdown, DropdownButton, Form, InputGroup, ProgressBar} from "react-bootstrap";
 import {CURRENCY_SYMBOLS} from "../util/currencies";
-
+import {useAccounts} from "../hooks/useAccounts";
 
 export const TransactionForm = ({onSubmit, onCancel}) => {
 
-    const form = useForm();
+    const { formState: {errors}, getValues, handleSubmit, register, trigger} = useFormContext();
 
-    const cancel = () => {
-        onCancel && onCancel();
-        form.reset();
-    }
-
-    const submit = (data) => {
-        onSubmit && onSubmit(data);
-        form.reset();
-    }
-
-    return <FormProvider {...form}>
-        <Form onSubmit={form.handleSubmit(submit)}>
+    return <>
+        <Form onSubmit={handleSubmit(onSubmit)}>
             <Form.Row>
                 <Col sm={5}>
                     <Form.Label>From Account*</Form.Label>
-                    <Form.Control as="select" {...form.register('from')}>
-                        <option value="">Select From Account</option>
-                        <option value={'1'}>test1</option>
-                        <option value={'2'}>test2</option>
-                    </Form.Control>
-                    <Form.Control.Feedback>Testing message</Form.Control.Feedback>
+                    <AccountSelect
+                        name="from"
+                        // onChange={() => trigger("to")}
+                        validator={{
+                            validate: {
+                                notEmpty: val => val !== "" || "From Account cannot be blank",
+                                distinct: val => val !== getValues("to") || "From Account must be different than To Account"
+                            }
+                        }}
+                    />
                 </Col>
                 <Col sm={2} className="text-center d-none d-sm-block" style={{paddingTop: '37px'}}>
                     <i className="bi bi-arrow-right"/>
                 </Col>
                 <Col sm={5}>
                     <Form.Label>To Account*</Form.Label>
-                    <Form.Control as="select" {...form.register('to')}>
-                        <option value="">Select To Account</option>
-                        <option value={'1'}>test1</option>
-                        <option value={'2'}>test2</option>
-                    </Form.Control>
-                    <Form.Control.Feedback>Testing message</Form.Control.Feedback>
+                    <AccountSelect
+                        name="to"
+                        // onChange={() => trigger("from")}
+                        validator={{
+                            validate: {
+                                notEmpty: val => val !== "" || "To Account cannot be blank",
+                                distinct: val => val !== getValues("from") || "To Account must be different than From Account"
+                            }
+                        }}
+                    />
                 </Col>
             </Form.Row>
 
             <Form.Group>
                 <Form.Label>Description</Form.Label>
-                <Form.Control type="text" {...form.register('description')}/>
-                <Form.Control.Feedback>Testing message</Form.Control.Feedback>
+                <Form.Control
+                    type="text"
+                    isInvalid={errors && errors.description}
+                    {...register('description', {
+                        maxLength: {
+                            value: 100,
+                            message: "Description must be 100 characters or fewer"
+                        }
+                    })}
+                />
+                <Form.Control.Feedback type="invalid">
+                    {errors && errors.description && errors.description.message}
+                </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group>
@@ -57,31 +66,48 @@ export const TransactionForm = ({onSubmit, onCancel}) => {
                     <Form.Control
                         type="number"
                         step={0.01}
-                        min={0}
-                        {...form.register('amount')}
+                        isInvalid={errors && errors.amount}
+                        {...register('amount', {
+                            required: "Amount cannot be blank",
+                            min: {
+                               value: .01,
+                               message: "Amount must be greater than 0"
+                            },
+                            max: {
+                                value: 9999.99,
+                                message: "Amount must be less than 10,000.00"
+                            },
+                            pattern: {
+                                value: /^[0-9]{1,4}(?:\.[0-9]{2})?$/,
+                                message: "Incorrect format"
+                            }
+                        })}
                     />
+                    <Form.Control.Feedback type="invalid">
+                        {errors && errors.amount && errors.amount.message}
+                    </Form.Control.Feedback>
                 </InputGroup>
             </Form.Group>
 
             <Button type="submit" variant="success">
                 Submit
             </Button>
-            <Button type="button" onClick={cancel} variant="secondary">
+            <Button type="button" onClick={onCancel} variant="secondary">
                 Cancel
             </Button>
         </Form>
-    </FormProvider>
+    </>
 
 }
 
 const Currency = () => {
 
-    const form = useFormContext();
+    const {setValue} = useFormContext();
     const [currency, setCurrency] = useState('USD');
 
     useEffect(() => {
         if (currency) {
-            form.setValue('currency', currency);
+            setValue('currency', currency);
         }
     }, [currency]);
 
@@ -93,4 +119,37 @@ const Currency = () => {
             <Dropdown.Item onClick={() => setCurrency('YEN')}>{CURRENCY_SYMBOLS['YEN']}</Dropdown.Item>
         </DropdownButton>
     </>
+}
+
+const AccountSelect = ({name, validator={}, onChange, noSelect}) => {
+
+    const [data, loading] = useAccounts();
+    const {formState: {errors}, register} = useFormContext();
+
+    return <>
+        {loading && (
+            <ProgressBar
+                style={{height: '40px'}}
+                animated
+                now={100}
+                label="Retrieving Accounts..."
+            />
+        )}
+        {data && (<>
+            <Form.Control
+                as="select"
+                {...register(name, validator)}
+                isInvalid={errors && errors[name]}
+            >
+                <option value="">{noSelect || 'Please select an option'}</option>
+                {data && data.map(acc => {
+                    return <option key={acc.id} value={acc.id}>{acc.name}</option>
+                })}
+            </Form.Control>
+            <Form.Control.Feedback type="invalid">
+                { errors && errors[name] && errors[name].message }
+            </Form.Control.Feedback>
+        </>)}
+    </>
+
 }

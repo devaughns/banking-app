@@ -67,7 +67,7 @@
     {
       "id": 1,
       "name": "Savings",
-      "startingFunds": 15029.78,
+      "startingBalance": 15029.78,
       "transactions": [
         {
           "id": 11,

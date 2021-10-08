@@ -3,25 +3,27 @@ import axios from "axios";
 
 export const useAccounts = () => {
 
-    const [accounts, setAccounts] = useState(null);
+    console.log('called useAccounts')
+
+    const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (accounts) {
+        if (data) {
             setLoading(false);
             setError(false);
         }
-    }, [accounts]);
+    }, [data]);
 
     useEffect(() => {
         axios.get('./accounts.json')
-            .then(res => setAccounts(res.data.accounts))
+            .then(res => setData(res.data.accounts))
             .catch(err => setError(err));
     }, []);
 
     return [
-        accounts,
+        data,
         loading,
         error
     ]
