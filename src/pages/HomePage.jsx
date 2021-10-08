@@ -4,6 +4,7 @@ import {Transactions} from "./Transactions";
 export const HomePage = () => {
 
     return <>
+        <br/>
         <Transactions/>
     </>
 

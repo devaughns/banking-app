@@ -5,6 +5,9 @@ import moment from "moment";
 import {TransactionForm} from "../components/TransactionForm";
 import {useAccounts} from "../hooks/useAccounts";
 import {FormProvider, useForm} from "react-hook-form";
+import {getNextId} from "../util/getNextId";
+
+const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 export const Transactions = () => {
 
@@ -18,17 +21,66 @@ export const Transactions = () => {
         if (data) {
             setAccounts(data);
         }
-    }, [data])
+    }, [data]);
 
     const sortTransactions = (tran1, tran2) => {
-        return moment(tran2.timestamp, 'YYYY-MM-DD HH:mm:ss') - moment(tran1.timestamp, 'YYYY-MM-DD HH:mm:ss');
+        return moment(tran2.timestamp, DATE_FORMAT) - moment(tran1.timestamp, DATE_FORMAT);
+    }
+
+    const getAccountById = (id) => {
+        return accounts && accounts.find(it => it.id == id);
+    }
+
+    const onSubmit = (data) => {
+        debitTransfer(data, getAccountById(data.from));
+        creditTransfer(data, getAccountById(data.to))
+    }
+
+    const debitTransfer = (transfer, account) => {
+        const transaction = {
+            id: getNextId(account.transactions), // simulating a DB sequence
+            timestamp: moment().format(DATE_FORMAT),
+            action: "debit",
+            description: transfer.description ? transfer.description : transferDescription(transfer),
+            amount: transfer.amount,
+            currency: transfer.currency
+        };
+        const acct = {...account};
+        acct.transactions.push(transaction);
+        updateAccountInList(acct);
+    }
+
+    const creditTransfer = (transfer, account) => {
+        const transaction = {
+            id: getNextId(account.transactions),
+            timestamp: moment().format(DATE_FORMAT),
+            action: "credit",
+            description: transfer.description ? transfer.description : transferDescription(transfer),
+            amount: transfer.amount,
+            currency: transfer.currency
+        };
+        const acct = {...account};
+        acct.transactions.push(transaction);
+        updateAccountInList(acct);
+    }
+
+    const updateAccountInList = (account) => {
+        const accts = [...accounts];
+        const acctIndex = accts.findIndex(it => it.id == account.id);
+        accts[acctIndex] = account;
+        setAccounts(accts);
+    }
+
+    const transferDescription = (transfer) => {
+        const from = getAccountById(transfer.from);
+        const to = getAccountById(transfer.to)
+        return `Transfer from ${from.name} to ${to.name}`;
     }
 
     return <>
         <Row>
             <Col md={{span: 10, offset: 1}}>
                 <h4>Transactions</h4>
-
                 <Card>
                     <Card.Body>
                         <Row>
@@ -68,9 +120,7 @@ export const Transactions = () => {
                                 )}
                             </Col>
                         </Row>
-
                         <hr/>
-
                         {!account && (<>
                             <Alert variant="info">
                                 Please select an Account
@@ -84,7 +134,6 @@ export const Transactions = () => {
                                 </Fragment>
                             })}
                         </>)}
-
                     </Card.Body>
                     <Card.Footer>
                         <Button variant="success" disabled={showForm} onClick={() => setShowForm(true)}>
@@ -99,7 +148,9 @@ export const Transactions = () => {
                                             formMethods.reset();
                                         }}
                                         onSubmit={data => {
-                                            console.log(data)
+                                            onSubmit(data);
+                                            setShowForm(false);
+                                            formMethods.reset();
                                         }}
                                     />
                                 </FormProvider>

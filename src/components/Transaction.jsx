@@ -1,9 +1,7 @@
 import React, {useState} from "react";
 import {Row, Collapse, Col, Card, Fade} from "react-bootstrap";
 import moment from "moment";
-
-const BS_RED = '#dc3545';
-const BS_GREEN = '#28a745'
+import {CURRENCY_SYMBOLS} from "../util/currencies";
 
 export const Transaction = ({transaction, show}) => {
 
@@ -14,20 +12,13 @@ export const Transaction = ({transaction, show}) => {
         credit: 'success'
     };
 
-    const getCurrencySymbol = {
-        BP: '\u00A3',
-        YEN: '\u00A5',
-        EUR: '\u20AC',
-        USD: '$'
-    }
-
     const formatDate = (date, format) => {
         return moment(date, 'YYYY-MM-DD HH:mm:ss').format(format);
     }
 
     return <Row>
         <Col>
-            <Card border={actionType[transaction.action]}>
+            <Card border={actionType[transaction.action]} className="transaction">
                 <Card.Header onClick={() => setShowInfo(!showInfo)}>
                     <Row>
                         <Col xs={2}>
@@ -39,10 +30,10 @@ export const Transaction = ({transaction, show}) => {
                             </Fade>
                         </Col>
                         <Col xs={4} sm={4} className="text-right">
-                            <span style={{color: transaction.action === 'debit' ? BS_RED : BS_GREEN, fontWeight: 'bold'}}>
+                            <span className={transaction.action}>
                                 {transaction.action === 'debit' && "-"}
-                                {getCurrencySymbol[transaction.currency]}
-                                {transaction.amount.toFixed(2)}
+                                {CURRENCY_SYMBOLS[transaction.currency]}
+                                {parseFloat(transaction.amount).toFixed(2)}
                             </span>
                         </Col>
                         <Col xs={1} style={{textAlign: 'center'}}>
