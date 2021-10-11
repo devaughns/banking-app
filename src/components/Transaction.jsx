@@ -21,15 +21,15 @@ export const Transaction = ({transaction, show}) => {
             <Card border={actionType[transaction.action]} className="transaction">
                 <Card.Header onClick={() => setShowInfo(!showInfo)} data-testid="card-header">
                     <Row>
-                        <Col xs={2} data-testid="date">
+                        <Col xs={5} sm={2} data-testid="date">
                             {formatDate(transaction.timestamp, 'MM/DD/YYYY')}
                         </Col>
-                        <Col xs={5}>
+                        <Col sm={5} className="d-xs-block">
                             <Fade in={!showInfo}>
                                 <div data-testid="description-collapsed">{transaction.description}</div>
                             </Fade>
                         </Col>
-                        <Col xs={4} sm={4} className="text-right">
+                        <Col xs={5} sm={4} className="text-right">
                             <span className={transaction.action}>
                                 <span data-testid="action-symbol">{transaction.action === 'debit' && "-"}</span>
                                 <span data-testid="currency">{CURRENCY_SYMBOLS[transaction.currency]}</span>

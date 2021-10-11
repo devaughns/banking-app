@@ -85,13 +85,8 @@ export const Transactions = () => {
                     <Card.Body>
                         <Row>
                             <Col xs={6} sm={2}>
-                                <b className="form-label">Balance:</b>
                             </Col>
                             <Col xs={6} sm={3} className="text-right">
-                                {account
-                                    ? (account.startingBalance && account.startingBalance.toFixed(2)) || '000.00'
-                                    : <>(N/A)</>
-                                }
                             </Col>
                             <Col xs={4} sm={2}>
                                 <b className="form-label">Account:</b>

@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {useFormContext} from "react-hook-form";
-import {Button, Col, Dropdown, DropdownButton, Form, InputGroup, ProgressBar} from "react-bootstrap";
+import {Button, Col, Dropdown, DropdownButton, Form, InputGroup} from "react-bootstrap";
 import {CURRENCY_SYMBOLS} from "../util/currencies";
-import {useAccounts} from "../hooks/useAccounts";
 import {AccountSelect} from "./AccountSelect";
 
 export const TransactionForm = ({onSubmit, onCancel}) => {
 
-    const { formState: {errors}, getValues, handleSubmit, register, trigger} = useFormContext();
+    const { formState: {errors}, getValues, handleSubmit, register} = useFormContext();
 
     return <>
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -16,7 +15,6 @@ export const TransactionForm = ({onSubmit, onCancel}) => {
                     <Form.Label>From Account*</Form.Label>
                     <AccountSelect
                         name="from"
-                        // onChange={() => trigger("to")}
                         validator={{
                             validate: {
                                 notEmpty: val => val !== "" || "From Account cannot be blank",
@@ -32,7 +30,6 @@ export const TransactionForm = ({onSubmit, onCancel}) => {
                     <Form.Label>To Account*</Form.Label>
                     <AccountSelect
                         name="to"
-                        // onChange={() => trigger("from")}
                         validator={{
                             validate: {
                                 notEmpty: val => val !== "" || "To Account cannot be blank",
