@@ -23,7 +23,7 @@ The application uses the data stored in the `/public/accounts.json` file to both
 
 If you'd like to test with different data, simply add/modify the file to include transactions in the following format:
 
-```aidl
+```
 {
     "accounts": [
         {
