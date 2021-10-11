@@ -3,8 +3,6 @@ import axios from "axios";
 
 export const useAccounts = () => {
 
-    console.log('called useAccounts')
-
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

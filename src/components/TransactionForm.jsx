@@ -3,6 +3,7 @@ import {useFormContext} from "react-hook-form";
 import {Button, Col, Dropdown, DropdownButton, Form, InputGroup, ProgressBar} from "react-bootstrap";
 import {CURRENCY_SYMBOLS} from "../util/currencies";
 import {useAccounts} from "../hooks/useAccounts";
+import {AccountSelect} from "./AccountSelect";
 
 export const TransactionForm = ({onSubmit, onCancel}) => {
 
@@ -47,6 +48,7 @@ export const TransactionForm = ({onSubmit, onCancel}) => {
                 <Form.Control
                     type="text"
                     isInvalid={errors && errors.description}
+                    data-testid="description"
                     {...register('description', {
                         maxLength: {
                             value: 100,
@@ -54,7 +56,7 @@ export const TransactionForm = ({onSubmit, onCancel}) => {
                         }
                     })}
                 />
-                <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback type="invalid" data-testid="invalid-description">
                     {errors && errors.description && errors.description.message}
                 </Form.Control.Feedback>
             </Form.Group>
@@ -67,6 +69,7 @@ export const TransactionForm = ({onSubmit, onCancel}) => {
                         type="number"
                         step={0.01}
                         isInvalid={errors && errors.amount}
+                        data-testid="amount"
                         {...register('amount', {
                             required: "Amount cannot be blank",
                             min: {
@@ -83,16 +86,16 @@ export const TransactionForm = ({onSubmit, onCancel}) => {
                             }
                         })}
                     />
-                    <Form.Control.Feedback type="invalid">
+                    <Form.Control.Feedback type="invalid" data-testid="invalid-amount">
                         {errors && errors.amount && errors.amount.message}
                     </Form.Control.Feedback>
                 </InputGroup>
             </Form.Group>
 
-            <Button type="submit" variant="success">
+            <Button type="submit" variant="success" data-testid="submit">
                 Submit
             </Button>
-            <Button type="button" onClick={onCancel} variant="secondary">
+            <Button type="button" onClick={onCancel} variant="secondary" data-testid="cancel">
                 Cancel
             </Button>
         </Form>
@@ -119,37 +122,4 @@ const Currency = () => {
             <Dropdown.Item onClick={() => setCurrency('YEN')}>{CURRENCY_SYMBOLS['YEN']}</Dropdown.Item>
         </DropdownButton>
     </>
-}
-
-const AccountSelect = ({name, validator={}, onChange, noSelect}) => {
-
-    const [data, loading] = useAccounts();
-    const {formState: {errors}, register} = useFormContext();
-
-    return <>
-        {loading && (
-            <ProgressBar
-                style={{height: '40px'}}
-                animated
-                now={100}
-                label="Retrieving Accounts..."
-            />
-        )}
-        {data && (<>
-            <Form.Control
-                as="select"
-                {...register(name, validator)}
-                isInvalid={errors && errors[name]}
-            >
-                <option value="">{noSelect || 'Please select an option'}</option>
-                {data && data.map(acc => {
-                    return <option key={acc.id} value={acc.id}>{acc.name}</option>
-                })}
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-                { errors && errors[name] && errors[name].message }
-            </Form.Control.Feedback>
-        </>)}
-    </>
-
 }

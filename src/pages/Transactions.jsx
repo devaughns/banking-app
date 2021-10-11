@@ -18,7 +18,7 @@ export const Transactions = () => {
     const formMethods = useForm();
 
     useEffect(() => {
-        if (data) {
+        if (data && JSON.stringify(data) !== JSON.stringify(accounts)) {
             setAccounts(data);
         }
     }, [data]);
@@ -102,12 +102,14 @@ export const Transactions = () => {
                                         style={{height: '40px'}}
                                         animated
                                         now={100}
+                                        data-testid="accounts-progress"
                                         label="Retrieving Accounts..."
                                     />
                                 )}
                                 {accounts && (
                                     <select
                                         className="form-control"
+                                        data-testid="accounts"
                                         onChange={e => {
                                             setAccount(accounts.find(it => it.id == e.target.value))
                                         }}
@@ -122,12 +124,11 @@ export const Transactions = () => {
                         </Row>
                         <hr/>
                         {!account && (<>
-                            <Alert variant="info">
+                            <Alert variant="info" data-testid="no-account-alert">
                                 Please select an Account
                             </Alert>
                         </>)}
                         {account && (<>
-                            {/*TODO: extract the sort out so that it does sort on every render*/}
                             {account.transactions.sort(sortTransactions).map(transaction => {
                                 return <Fragment key={transaction.id}>
                                     <Transaction transaction={transaction}/>
@@ -136,7 +137,12 @@ export const Transactions = () => {
                         </>)}
                     </Card.Body>
                     <Card.Footer>
-                        <Button variant="success" disabled={showForm} onClick={() => setShowForm(true)}>
+                        <Button
+                            variant="success"
+                            disabled={showForm}
+                            onClick={() => setShowForm(true)}
+                            data-testid="transferBtn"
+                        >
                             <i className="bi bi-arrow-left-right"/> Transfer Funds
                         </Button>
                         <Collapse in={showForm}>
